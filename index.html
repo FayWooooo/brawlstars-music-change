@@ -1,4 +1,60 @@
 <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* 你的網站按鈕樣式 */
+        .my-trigger-btn {
+            font-size: 50px;
+            padding: 20px;
+            background: #ffcc00;
+            border: 5px solid #000;
+            border-radius: 20px;
+            color: #000;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+        }
+    </style>
+</head>
 <body>
-    <a style="font-size: 70px;" href="brawlstars://StopMusic">關閉音樂</a>
+
+    <a href="brawlstars://StopMusic" class="my-trigger-btn" onclick="triggerGameUI()">
+        關閉音樂並展開文字
+    </a>
+
+    <script>
+        function triggerGameUI() {
+            // 由於你的網頁是嵌入在遊戲 Inbox 的 iframe 或 WebView 中
+            // 我們嘗試向上尋找遊戲原生的 DOM 節點
+            try {
+                // 1. 尋找父視窗或當前頁面中所有符合 Supercell 1-0-1 Schema 的 buttonTextWrapper
+                const targetDivs = document.querySelectorAll('.buttonTextWrapper');
+                
+                targetDivs.forEach(div => {
+                    // 2. 強制解除遊戲 CSS 對文字的限制 (解決 "..." 問題)
+                    div.style.whiteSpace = 'normal';
+                    div.style.overflow = 'visible';
+                    div.style.textOverflow = 'clip';
+                    div.style.display = 'block';
+                    
+                    // 3. 模擬點擊效果 (套用 2.css 裡的縮放類名)
+                    div.classList.add('o6rTa1sXGSWyASPtZhCJ');
+                    
+                    // 4. 如果文字被限制在父層，也要一併展開
+                    let parent = div.parentElement;
+                    while(parent && parent.id !== 'inbox') {
+                        parent.style.maxHeight = 'none';
+                        parent.style.overflow = 'visible';
+                        parent = parent.parentElement;
+                    }
+                });
+                
+                console.log("已嘗試觸發遊戲內部容器展開");
+            } catch (e) {
+                console.error("無法存取遊戲原始碼，可能存在跨網域限制");
+            }
+        }
+    </script>
 </body>
+</html>
