@@ -3,57 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        /* 你的網站按鈕樣式 */
-        .my-trigger-btn {
-            font-size: 50px;
-            padding: 20px;
-            background: #ffcc00;
-            border: 5px solid #000;
-            border-radius: 20px;
-            color: #000;
+        .lua-btn {
+            font-size: 60px;
+            padding: 30px;
+            background: #e74c3c; /* 警告紅色 */
+            color: white;
+            border: 8px solid #000;
+            border-radius: 30px;
             text-decoration: none;
             display: inline-block;
-            font-weight: bold;
         }
     </style>
 </head>
-<body>
+<body style="background-color: rgb(30, 66, 160); text-align: center; padding-top: 100px;">
 
-    <a href="brawlstars://StopMusic" class="my-trigger-btn" onclick="triggerGameUI()">
-        關閉音樂並展開文字
+    <a href="javascript:void(0)" class="lua-btn" onclick="startInfiniteAlert()">
+        開始無限 Lua Alert 測試
     </a>
 
     <script>
-        function triggerGameUI() {
-            // 由於你的網頁是嵌入在遊戲 Inbox 的 iframe 或 WebView 中
-            // 我們嘗試向上尋找遊戲原生的 DOM 節點
-            try {
-                // 1. 尋找父視窗或當前頁面中所有符合 Supercell 1-0-1 Schema 的 buttonTextWrapper
-                const targetDivs = document.querySelectorAll('.buttonTextWrapper');
+        function startInfiniteAlert() {
+            console.log("正在啟動無限彈窗測試...");
+            
+            // 使用 setInterval 達成無限循環
+            setInterval(() => {
+                // 觸發遊戲原生的 Alert 指令
+                // 注意：brawlstars://popup 是常見的測試指令，
+                // 如果無效，請嘗試 brawlstars://alert?message=TEST
+                window.location.href = "brawlstars://alert?message=基於安全原因，你的帳號已被鎖定。請聯繫玩家支援團隊恢復你的帳號。&title=帳號已鎖定";
                 
-                targetDivs.forEach(div => {
-                    // 2. 強制解除遊戲 CSS 對文字的限制 (解決 "..." 問題)
-                    div.style.whiteSpace = 'normal';
-                    div.style.overflow = 'visible';
-                    div.style.textOverflow = 'clip';
-                    div.style.display = 'block';
-                    
-                    // 3. 模擬點擊效果 (套用 2.css 裡的縮放類名)
-                    div.classList.add('o6rTa1sXGSWyASPtZhCJ');
-                    
-                    // 4. 如果文字被限制在父層，也要一併展開
-                    let parent = div.parentElement;
-                    while(parent && parent.id !== 'inbox') {
-                        parent.style.maxHeight = 'none';
-                        parent.style.overflow = 'visible';
-                        parent = parent.parentElement;
-                    }
-                });
-                
-                console.log("已嘗試觸發遊戲內部容器展開");
-            } catch (e) {
-                console.error("無法存取遊戲原始碼，可能存在跨網域限制");
-            }
+                // 同時嘗試觸發你之前提到的 buttonTextWrapper 效果，讓遊戲畫面有反應
+                const gameDiv = parent.document.querySelector('.buttonTextWrapper');
+                if (gameDiv) {
+                    gameDiv.classList.toggle('o6rTa1sXGSWyASPtZhCJ');
+                }
+            }, 500); // 每 0.5 秒彈出一次
         }
     </script>
 </body>
